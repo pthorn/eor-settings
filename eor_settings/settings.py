@@ -42,20 +42,25 @@ class ParseSettings(object):
         key = self.prefix + '.' + name
 
         if key in self.settings:
-            app_settings[key] = convert(self.settings[key])
+            try:
+                app_settings[key] = convert(self.settings[key])
+            except Exception as e:
+                msg = 'bad value for setting %s: %s' % (key, e)
+                log.error(msg)
+                raise ConvertException(msg) from e
         else:
             if default is not _none:
                 app_settings[key] = default
             else:
                 msg = 'required setting %s not present in config' % (key,)
                 log.error(msg)
-                raise SettingsParseException(msg)
+                raise SettingNotPresentException(msg)
 
         if variants:
             if app_settings[key] not in variants:
                 msg = 'value for setting %s = %s must be one of %s' % (key, app_settings[key], variants)
                 log.error(msg)
-                raise SettingsParseException(msg)
+                raise BadVariantException(msg)
 
         return self
 

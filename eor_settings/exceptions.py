@@ -7,5 +7,11 @@ class SettingsException(Exception):
 class UnknownSettingException(SettingsException):
     pass
 
-class SettingsParseException(SettingsException):
+class ConvertException(SettingsException):
+    pass
+
+class SettingNotPresentException(SettingsException):
+    pass
+
+class BadVariantException(SettingsException):
     pass
